@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlflow-tracking
+  namespace: mlflow-tracking
+spec:
+  type: LoadBalancer
+  selector:
+    app: mlflow-tracking
+  ports:
+  - port: 5000
+    targetPort: 5000
