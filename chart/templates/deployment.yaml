@@ -1,53 +1,47 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mlflow-tracking
-  namespace: mlflow-tracking
+  name: {{ .Values.mlflow.name }}
+  namespace: {{ .Values.mlflow.namespace }}
   labels:
-    app: mlflow-tracking
+    app: {{ .Values.mlflow.name }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.mlflow.replicaCount }}
   selector:
     matchLabels:
-      app: mlflow-tracking
+      app: {{ .Values.mlflow.name }}
   template:
     metadata:
       labels:
-        app: mlflow-tracking
+        app: {{ .Values.mlflow.name }}
     spec:
       containers:
-      - name: mlflow-tracking
-        image: ghcr.io/crate/mlflow-cratedb:latest
-        # command to do pip install boto3 and then start the mlflow server
+      - name: {{ .Values.mlflow.name }}
+        image: {{ .Values.mlflow.image.repository }}:{{ .Values.mlflow.image.tag }}
         command: ["/bin/sh", "-c"]
         args:
         - |
           pip install boto3 &&
           mlflow-cratedb server \
-            --backend-store-uri=crate://crate@cratedb.cratedb.svc.cluster.local:4200/?schema=mlflow \
-            --artifacts-destination=s3://mlartifacts \
+            --backend-store-uri=crate://crate@{{ .Values.cratedb.host }}:{{ .Values.cratedb.port }}/?schema={{ .Values.cratedb.schema }} \
+            --artifacts-destination=s3://{{ .Values.s3.bucket }} \
             --serve-artifacts \
             --host=0.0.0.0 \
             --gunicorn-opts=--log-level=debug    
         ports:
-        - containerPort: 5000
+        - containerPort: {{ .Values.service.targetPort }}
         resources:
-          limits:
-            memory: "1Gi"
-            cpu: "1"
-          requests:
-            memory: "500Mi"
-            cpu: "0.50"
+          {{- toYaml .Values.mlflow.resources | nindent 10 }}
         env:
         - name: MLFLOW_S3_ENDPOINT_URL
-          value: http://seaweedfs-s3.seaweedfs.svc.cluster.local:8333
+          value: {{ .Values.s3.endpoint }}
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
             secretKeyRef:
-              name: s3-secret-deployment
+              name: {{ .Values.s3.secretName }}
               key: AWS_ACCESS_KEY_ID
         - name: AWS_SECRET_ACCESS_KEY
           valueFrom:
             secretKeyRef:
-              name: s3-secret-deployment
+              name: {{ .Values.s3.secretName }}
               key: AWS_SECRET_ACCESS_KEY

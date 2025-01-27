@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mlflow-tracking
-  namespace: mlflow-tracking
+  name: {{ .Values.mlflow.name }}
+  namespace: {{ .Values.mlflow.namespace }}
 spec:
-  type: LoadBalancer
+  type: {{ .Values.service.type }}
   selector:
-    app: mlflow-tracking
+    app: {{ .Values.mlflow.name }}
   ports:
-  - port: 5000
-    targetPort: 5000
+  - port: {{ .Values.service.port }}
+    targetPort: {{ .Values.service.targetPort }}

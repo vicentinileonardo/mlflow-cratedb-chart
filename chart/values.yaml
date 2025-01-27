@@ -1,0 +1,32 @@
+mlflow:
+  name: mlflow-tracking
+  namespace: mlflow-tracking
+  replicaCount: 1
+  
+  image:
+    repository: ghcr.io/crate/mlflow-cratedb
+    # when updating the image tag, also update the appVersion in chart/Chart.yaml
+    tag: 2.14.0 
+    
+  resources:
+    limits:
+      memory: 1Gi
+      cpu: 1
+    requests:
+      memory: 500Mi
+      cpu: 0.50
+
+cratedb:
+  host: cratedb.cratedb.svc.cluster.local
+  port: 4200
+  schema: mlflow
+
+s3:
+  bucket: mlartifacts
+  endpoint: http://seaweedfs-s3.seaweedfs.svc.cluster.local:8333
+  secretName: s3-secret-deployment
+
+service:
+  type: LoadBalancer
+  port: 5000
+  targetPort: 5000
