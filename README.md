@@ -1,6 +1,6 @@
 # MLFlow CrateDB chart
 
-This is a Helm chart for [MLFlow adaper for CrateDB](https://github.com/crate/mlflow-cratedb).
+This is a Helm chart for [MLFlow adapter for CrateDB](https://github.com/crate/mlflow-cratedb).
 
 ## Prerequisites
 
