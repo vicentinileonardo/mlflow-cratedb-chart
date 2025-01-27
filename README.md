@@ -1,6 +1,10 @@
 # MLFlow CrateDB chart
 
-This is a Helm chart to for MLFlow-CrateDB adapter.
+This is a Helm chart for [MLFlow adaper for CrateDB](https://github.com/crate/mlflow-cratedb).
+
+## Prerequisites
+
+- A CrateDB instance running and accessible from the Kubernetes cluster
 
 ## How to install
 
