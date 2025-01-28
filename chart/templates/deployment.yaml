@@ -23,7 +23,7 @@ spec:
         - |
           pip install boto3 &&
           mlflow-cratedb server \
-            --backend-store-uri=crate://crate@{{ .Values.cratedb.host }}:{{ .Values.cratedb.port }}/?schema={{ .Values.cratedb.schema }} \
+            --backend-store-uri=crate://$(CRATEDB_USERNAME):$(CRATEDB_PASSWORD)@{{ .Values.cratedb.host }}:{{ .Values.cratedb.port }}/?schema={{ .Values.cratedb.schema }} \
             --artifacts-destination=s3://{{ .Values.s3.bucket }} \
             --serve-artifacts \
             --host=0.0.0.0 \
@@ -45,3 +45,13 @@ spec:
             secretKeyRef:
               name: {{ .Values.s3.secretName }}
               key: AWS_SECRET_ACCESS_KEY
+        - name: CRATEDB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.cratedb.secretName }}
+              key: CRATEDB_USERNAME        
+        - name: CRATEDB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.cratedb.secretName }}
+              key: CRATEDB_PASSWORD

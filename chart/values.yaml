@@ -20,6 +20,7 @@ cratedb:
   host: cratedb.cratedb.svc.cluster.local
   port: 4200
   schema: mlflow
+  secretName: cratedb-credentials
 
 s3:
   bucket: mlartifacts
