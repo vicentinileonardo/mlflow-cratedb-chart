@@ -17,7 +17,7 @@ mlflow:
       cpu: 0.50
 
 cratedb:
-  host: cratedb.cratedb.svc.cluster.local
+  host: crate-cratedb-cluster.cratedb.svc.cluster.local
   port: 4200
   schema: mlflow
   secretName: cratedb-credentials
